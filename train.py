@@ -15,6 +15,7 @@ import tensorflow as tf
 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D
+from tensorflow.keras import regularizers
 # from tensorflow.python.client import device_lib
 
 import image_dataset
@@ -66,12 +67,13 @@ def create_model():
 	"""
 	model = Sequential([
 		Conv2D(filters=24, kernel_size=5, strides=2, padding='same', activation='relu', input_shape=(IMG_HEIGHT, IMG_WIDTH, 3)),
-		Conv2D(filters=36, kernel_size=5, strides=2, padding='same', activation='relu'),
-		Conv2D(filters=48, kernel_size=5, strides=2, padding='same', activation='relu'),
-		Conv2D(filters=64, kernel_size=3, padding='same', activation='relu'),
-		Conv2D(filters=64, kernel_size=3, padding='same', activation='relu'),
+		Conv2D(filters=36, kernel_size=5, strides=2, padding='same', activation='relu', kernel_regularizer=regularizers.l2(0.001)),
+		Conv2D(filters=48, kernel_size=5, strides=2, padding='same', activation='relu', kernel_regularizer=regularizers.l2(0.001)),
+		Conv2D(filters=64, kernel_size=3, padding='same', activation='relu', kernel_regularizer=regularizers.l2(0.001)),
+		Conv2D(filters=64, kernel_size=3, padding='same', activation='relu', kernel_regularizer=regularizers.l2(0.001)),
 		Flatten(),
-		Dense(units=250, activation='relu'),
+		Dense(units=250, activation='relu', kernel_regularizer=regularizers.l2(0.001)),
+		Dense(units=dataset.class_count, activation='softmax')
         Dense(units=dataset.class_count, activation='softmax')
 	])
 
